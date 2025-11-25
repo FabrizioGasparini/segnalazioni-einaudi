@@ -19,3 +19,17 @@ export async function updateStatus(id: number, status: string) {
 
   revalidatePath("/admin");
 }
+
+export async function deleteSubmission(id: number) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user?.admin) {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.submission.delete({
+    where: { id },
+  });
+
+  revalidatePath("/admin");
+}

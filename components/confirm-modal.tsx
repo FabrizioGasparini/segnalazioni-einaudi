@@ -40,7 +40,7 @@ export default function ConfirmModal({
         </button>
 
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-500 mb-6">{description}</p>
+        <p className="text-gray-500 mb-6 whitespace-pre-wrap break-all">{description}</p>
 
         <div className="flex justify-end gap-3">
           <button
