@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Segnalazioni Einaudi
 
-## Getting Started
+Web application per la gestione delle segnalazioni e proposte degli studenti dell'Istituto Tecnico Statale L.Einaudi di Correggio.
 
-First, run the development server:
+## Funzionalità
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Autenticazione**: Accesso riservato agli studenti con email `@einaudicorreggio.it`.
+- **Segnalazioni**: Gli studenti possono segnalare problemi.
+- **Proposte**: Gli studenti possono proporre nuove idee.
+- **Admin Dashboard**: Gestione delle segnalazioni (approvazione, rifiuto, completamento) riservata agli amministratori.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologie
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: Next.js 15 (App Router)
+- **Database**: SQLite (con Prisma ORM)
+- **Auth**: NextAuth.js (Google Provider)
+- **Styling**: Tailwind CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
 
-## Learn More
+1.  Clona il repository.
+2.  Installa le dipendenze: `npm install`.
+3.  Configura il file `.env` con le tue chiavi Google OAuth:
+    ```env
+    GOOGLE_CLIENT_ID="tuo-client-id"
+    GOOGLE_CLIENT_SECRET="tuo-client-secret"
+    ```
+4.  Assicurati che il file `token.json` (Service Account Key) sia presente nella root del progetto.
+5.  Esegui le migrazioni del database: `npx prisma migrate dev`.
+6.  Avvia il server di sviluppo: `npm run dev`.
 
-To learn more about Next.js, take a look at the following resources:
+## Admin
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+L'utente `gasparini.fabrizio@einaudicorreggio.it` viene automaticamente promosso ad ADMIN al primo login.
