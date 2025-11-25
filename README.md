@@ -28,7 +28,3 @@ Web application per la gestione delle segnalazioni e proposte degli studenti del
 4.  Assicurati che il file `token.json` (Service Account Key) sia presente nella root del progetto.
 5.  Esegui le migrazioni del database: `npx prisma migrate dev`.
 6.  Avvia il server di sviluppo: `npm run dev`.
-
-## Admin
-
-L'utente `gasparini.fabrizio@einaudicorreggio.it` viene automaticamente promosso ad ADMIN al primo login.
